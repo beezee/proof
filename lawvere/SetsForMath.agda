@@ -40,12 +40,9 @@ infix 4 _∈_
 ≡→∈ x i (intro ev eql) ev₁ with (eql x )
 ... | ⟨ x′ , (uniq refl _) ⟩ = through ⟨ x′ , refl ⟩
 
-data UniqPB (P A B X : Set) (π₁ : P → A) (π₂ : P → B) (x : X → P) (f : X → A) (g : X → B) : Set where
-  uniq-pb : ProdUniq f g π₁ π₂ x → UniqPB P A B X π₁ π₂ x f g
-
 data Pullback (P A B C : Set) : Set₁ where
   pullback : (f : A → C) → (g : B → C) → (π₁ : P → A) → (π₂ : P → B) → (g ∘ π₂ ≡ f ∘ π₁)
-                → (∀ (X : Set) → (f′ : X → A) → (g′ : X → B) → ∃[ x ]( UniqPB P A B X π₁ π₂ x f′ g′ ))
+                → (∀ (X : Set) → (f′ : X → A) → (g′ : X → B) → ∃[ x ]( ProdUniq f′ g′ π₁ π₂ x ))
                 → Pullback P A B C
 
 data UniqArr {X A : Set} (f : X → A) : Set where
@@ -54,22 +51,13 @@ data UniqArr {X A : Set} (f : X → A) : Set where
 data Terminal (A : Set) : Set₁ where
   terminal : (∀ (X : Set) → (f : X → A) → UniqArr f) → Terminal A
 
-uniq-pb→prod-uniq : {P A B X : Set}
-  → (π₁ : P → A) → (π₂ : P → B)
-  → (x : X → P) → (f : X → A)
-  → (g : X → B)
-  → UniqPB P A B X π₁ π₂ x f g
-    ---------------------------
-  → ProdUniq f g π₁ π₂ x
-uniq-pb→prod-uniq π₁ π₂ x f g (uniq-pb x₁) = x₁
-
 pb-×-terminal→product : {P A B C : Set}
   → Pullback P A B C
   → Terminal C
     -------------------------
   → Prod A B P
 pb-×-terminal→product (pullback f g π₁ π₂ x x₁) (terminal x₂) =
-  prod π₁ π₂ (λ X f₁ g₁ → ⟨ proj₁ (x₁ X f₁ g₁) , uniq-pb→prod-uniq π₁ π₂ (proj₁ (x₁ X f₁ g₁)) f₁ g₁ (proj₂ (x₁ X f₁ g₁)) ⟩)
+  prod π₁ π₂ (λ X f₁ g₁ → x₁ X f₁ g₁)
 
 data UniqPO (P A B X : Set) (inj₁ : A → P) (inj₂ : B → P) (x : P → X) (f : A → X) (g : B → X) : Set where
   uniq-po : (x ∘ inj₁ ≡ f) → (x ∘ inj₂ ≡ g) → UniqPO P A B X inj₁ inj₂ x f g
