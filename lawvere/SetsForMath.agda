@@ -41,7 +41,7 @@ infix 4 _∈_
 ... | ⟨ x′ , (uniq refl _) ⟩ = through ⟨ x′ , refl ⟩
 
 data UniqPB (P A B X : Set) (π₁ : P → A) (π₂ : P → B) (x : X → P) (f : X → A) (g : X → B) : Set where
-  uniq-pb : (π₁ ∘ x ≡ f) → (π₂ ∘ x ≡ g) → ProdUniq f g π₁ π₂ x → UniqPB P A B X π₁ π₂ x f g
+  uniq-pb : ProdUniq f g π₁ π₂ x → UniqPB P A B X π₁ π₂ x f g
 
 data Pullback (P A B C : Set) : Set₁ where
   pullback : (f : A → C) → (g : B → C) → (π₁ : P → A) → (π₂ : P → B) → (g ∘ π₂ ≡ f ∘ π₁)
@@ -61,7 +61,7 @@ uniq-pb→prod-uniq : {P A B X : Set}
   → UniqPB P A B X π₁ π₂ x f g
     ---------------------------
   → ProdUniq f g π₁ π₂ x
-uniq-pb→prod-uniq π₁ π₂ x f g (uniq-pb x₁ x₂ x₃) = x₃
+uniq-pb→prod-uniq π₁ π₂ x f g (uniq-pb x₁) = x₁
 
 pb-×-terminal→product : {P A B C : Set}
   → Pullback P A B C
