@@ -66,8 +66,7 @@ terminal→product→pb : {P A B C : Set}
   → Pullback P A B C
 terminal→product→pb {P} {A} {B} {C} (terminal x₁) (prod π₁ π₂ x) with x₁ A | x₁ B | x₁ P
 terminal→product→pb {P} {A} {B} {C} (terminal x₁) (prod π₁ π₂ x) | ⟨ fst , snd ⟩ | ⟨ fst₁ , snd₁ ⟩ | ⟨ fst₂ , uniq-arr x₂ ⟩ with x₂ (fst ∘ π₁)
-...  | refl =
-    pullback fst fst₁ π₁ π₂ (x₂ (fst₁ ∘ π₂)) λ X f′ g′ → x X f′ g′
+...  | refl = pullback fst fst₁ π₁ π₂ (x₂ (fst₁ ∘ π₂)) λ X f′ g′ → x X f′ g′
 
 data UniqPO (P A B X : Set) (inj₁ : A → P) (inj₂ : B → P) (x : P → X) (f : A → X) (g : B → X) : Set where
   uniq-po : (x ∘ inj₁ ≡ f) → (x ∘ inj₂ ≡ g) → UniqPO P A B X inj₁ inj₂ x f g
