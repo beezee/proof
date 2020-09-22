@@ -72,7 +72,7 @@ pb-×-terminal→product (pullback f g π₁ π₂ x x₁) (terminal x₂) =
   prod π₁ π₂ (λ X f₁ g₁ → ⟨ proj₁ (x₁ X f₁ g₁) , uniq-pb→prod-uniq π₁ π₂ (proj₁ (x₁ X f₁ g₁)) f₁ g₁ (proj₂ (x₁ X f₁ g₁)) ⟩)
 
 data UniqPO (P A B X : Set) (inj₁ : A → P) (inj₂ : B → P) (x : P → X) (f : A → X) (g : B → X) : Set where
-    uniq-po : (x ∘ inj₁ ≡ f) → (x ∘ inj₂ ≡ g) → UniqPO P A B X inj₁ inj₂ x f g
+  uniq-po : (x ∘ inj₁ ≡ f) → (x ∘ inj₂ ≡ g) → UniqPO P A B X inj₁ inj₂ x f g
 
 data Pushout (P A B C : Set) (f : C → A) (g : C → B) : Set₁ where
   pushout : (inj₁ : A → P) → (inj₂ : B → P) → (inj₂ ∘ g ≡ inj₁ ∘ f)
