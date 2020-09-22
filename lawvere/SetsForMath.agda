@@ -1,7 +1,7 @@
 module Lawvere.SetsForMath where
 
 open import Relation.Binary.PropositionalEquality using (_≡_; refl; cong)
-open import Data.Product using (∃; ∃-syntax; proj₁; proj₂) renaming (_,_ to ⟨_,_⟩)
+open import Data.Product using (_×_; ∃; ∃-syntax; proj₁; proj₂) renaming (_,_ to ⟨_,_⟩)
 open import Function using (_∘_)
 
 data Uniq {T E A : Set} (i : E → A) (x : T → A) (x′ : T → E) : Set where
@@ -49,15 +49,25 @@ data UniqArr {X A : Set} (f : X → A) : Set where
   uniq-arr : (∀ (g : X → A) → g ≡ f) → UniqArr f
 
 data Terminal (A : Set) : Set₁ where
-  terminal : (∀ (X : Set) → (f : X → A) → UniqArr f) → Terminal A
+  terminal : (∀ (X : Set) → ∃[ f ](UniqArr {X} {A} f)) → Terminal A
 
 pb-×-terminal→product : {P A B C : Set}
-  → Pullback P A B C
   → Terminal C
+  → Pullback P A B C
     -------------------------
   → Prod A B P
-pb-×-terminal→product (pullback f g π₁ π₂ x x₁) (terminal x₂) =
+pb-×-terminal→product _ (pullback f g π₁ π₂ x x₁) =
   prod π₁ π₂ (λ X f₁ g₁ → x₁ X f₁ g₁)
+
+product→pb-×-terminal : {P A B C : Set}
+  → Terminal C
+  → Prod A B P
+    ---------------------------------
+  → Pullback P A B C
+product→pb-×-terminal {P} {A} {B} {C} (terminal x₁) (prod π₁ π₂ x) with x₁ A | x₁ B | x₁ P
+product→pb-×-terminal {P} {A} {B} {C} (terminal x₁) (prod π₁ π₂ x) | ⟨ fst , snd ⟩ | ⟨ fst₁ , snd₁ ⟩ | ⟨ fst₂ , uniq-arr x₂ ⟩ with x₂ (fst ∘ π₁)
+...  | refl =
+    pullback fst fst₁ π₁ π₂ (x₂ (fst₁ ∘ π₂)) λ X f′ g′ → x X f′ g′
 
 data UniqPO (P A B X : Set) (inj₁ : A → P) (inj₂ : B → P) (x : P → X) (f : A → X) (g : B → X) : Set where
   uniq-po : (x ∘ inj₁ ≡ f) → (x ∘ inj₂ ≡ g) → UniqPO P A B X inj₁ inj₂ x f g
