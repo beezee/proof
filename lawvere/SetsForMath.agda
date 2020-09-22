@@ -68,7 +68,6 @@ pb-×-terminal→product : {P A B C : Set}
   → Terminal C
     -------------------------
   → Prod A B P
-
 pb-×-terminal→product (pullback f g π₁ π₂ x x₁) (terminal x₂) =
   prod π₁ π₂ (λ X f₁ g₁ → ⟨ proj₁ (x₁ X f₁ g₁) , uniq-pb→prod-uniq π₁ π₂ (proj₁ (x₁ X f₁ g₁)) f₁ g₁ (proj₂ (x₁ X f₁ g₁)) ⟩)
 
