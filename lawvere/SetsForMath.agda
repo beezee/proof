@@ -51,21 +51,21 @@ data UniqArr {X A : Set} (f : X → A) : Set where
 data Terminal (A : Set) : Set₁ where
   terminal : (∀ (X : Set) → ∃[ f ](UniqArr {X} {A} f)) → Terminal A
 
-pb-×-terminal→product : {P A B C : Set}
+terminal→pb→product : {P A B C : Set}
   → Terminal C
   → Pullback P A B C
     -------------------------
   → Prod A B P
-pb-×-terminal→product _ (pullback f g π₁ π₂ x x₁) =
+terminal→pb→product _ (pullback f g π₁ π₂ x x₁) =
   prod π₁ π₂ (λ X f₁ g₁ → x₁ X f₁ g₁)
 
-product→pb-×-terminal : {P A B C : Set}
+terminal→product→pb : {P A B C : Set}
   → Terminal C
   → Prod A B P
     ---------------------------------
   → Pullback P A B C
-product→pb-×-terminal {P} {A} {B} {C} (terminal x₁) (prod π₁ π₂ x) with x₁ A | x₁ B | x₁ P
-product→pb-×-terminal {P} {A} {B} {C} (terminal x₁) (prod π₁ π₂ x) | ⟨ fst , snd ⟩ | ⟨ fst₁ , snd₁ ⟩ | ⟨ fst₂ , uniq-arr x₂ ⟩ with x₂ (fst ∘ π₁)
+terminal→product→pb {P} {A} {B} {C} (terminal x₁) (prod π₁ π₂ x) with x₁ A | x₁ B | x₁ P
+terminal→product→pb {P} {A} {B} {C} (terminal x₁) (prod π₁ π₂ x) | ⟨ fst , snd ⟩ | ⟨ fst₁ , snd₁ ⟩ | ⟨ fst₂ , uniq-arr x₂ ⟩ with x₂ (fst ∘ π₁)
 ...  | refl =
     pullback fst fst₁ π₁ π₂ (x₂ (fst₁ ∘ π₂)) λ X f′ g′ → x X f′ g′
 
