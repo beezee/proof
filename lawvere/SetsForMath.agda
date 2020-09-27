@@ -176,8 +176,7 @@ terminal→pb≃product {P} {A} {B} {C} (terminal ta) π₁ π₂ = record {
   ... | refl = refl
 
   tofrom : (prod : Prod A B P π₁ π₂) → terminal→pb→product (terminal ta) π₁ π₂ (terminal→product→pb (terminal ta) π₁ π₂ prod) ≡ prod
-  tofrom p with prod-uniq p (terminal→pb→product (terminal ta) π₁ π₂ (terminal→product→pb (terminal ta) π₁ π₂ p))
-  ... | z = sym z
+  tofrom p = sym (prod-uniq p (terminal→pb→product (terminal ta) π₁ π₂ (terminal→product→pb (terminal ta) π₁ π₂ p)))
 
 data Initial (A : Set) : Set₁ where
   initial : (∀ (X : Set) → ∃[ f ](UniqArr {A} {X} f)) → Initial A
@@ -232,5 +231,4 @@ initial→pushout≃coprod {P} {A} {B} {C} (initial ia) inj₁ inj₂ = record {
 
   tofrom : (cp : Coprod A B C inj₁ inj₂)
     → initial→pushout→coprod (initial ia) inj₁ inj₂ (initial→coprod→pushout (initial ia) inj₁ inj₂ cp) ≡ cp
-  tofrom cp with coprod-uniq (initial→pushout→coprod (initial ia) inj₁ inj₂ (initial→coprod→pushout (initial ia) inj₁ inj₂ cp)) cp
-  ... | z = z
+  tofrom cp = coprod-uniq (initial→pushout→coprod (initial ia) inj₁ inj₂ (initial→coprod→pushout (initial ia) inj₁ inj₂ cp)) cp
