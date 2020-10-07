@@ -232,3 +232,51 @@ initial→pushout≃coprod {P} {A} {B} {C} (initial ia) inj₁ inj₂ = record {
   tofrom : (cp : Coprod A B C inj₁ inj₂)
     → initial→pushout→coprod (initial ia) inj₁ inj₂ (initial→coprod→pushout (initial ia) inj₁ inj₂ cp) ≡ cp
   tofrom cp = coprod-uniq (initial→pushout→coprod (initial ia) inj₁ inj₂ (initial→coprod→pushout (initial ia) inj₁ inj₂ cp)) cp
+
+id : ∀ (A : Set) → A → A
+id A = λ x → x
+
+record Functor (F : Set → Set) : Set₁ where
+  field
+    map : ∀ {A B : Set} → (A → B) → F A → F B
+    map-id : ∀ {A : Set} → map (id A) ≡ id (F A)
+    map-compose : ∀ {A B C : Set} → (g : B → C) → (f : A → B) → map (g ∘ f) ≡ map g ∘ map f
+
+data Id (A : Set) : Set where
+  make-id : ∀ (a : A) → Id A
+
+IdF : Functor Id
+IdF = record {
+  map = id-map ;
+  map-id = id-map-id ;
+  map-compose = id-map-compose }
+  where
+
+  id-map : ∀ {A B : Set} → (A → B) → Id A → Id B
+  id-map f (make-id a) = make-id (f a)
+
+  id-map-id′ : ∀ {A : Set} → (a : Id A) → id-map (id A) a ≡ id (Id A) a
+  id-map-id′ (make-id a) = refl
+
+  id-map-id : ∀ {A : Set} → id-map (id A) ≡ id (Id A)
+  id-map-id = extensionality id-map-id′
+
+  id-map-compose′ : ∀ {A B C : Set} → (g : B → C) → (f : A → B) → (a : Id A) → id-map (g ∘ f) a ≡ (id-map g ∘ id-map f) a
+  id-map-compose′ g f (make-id a) = refl
+
+  id-map-compose : ∀ {A B C : Set} → (g : B → C) → (f : A → B) → id-map (g ∘ f) ≡ id-map g ∘ id-map f
+  id-map-compose g f = extensionality (id-map-compose′ g f)
+
+record NT (F G : Set → Set) : Set₁ where
+  field
+    FF : Functor F
+    FG : Functor G
+    apply : ∀ {A : Set} → F A → G A
+    naturality : ∀ {A B : Set} → (f : A → B) → (Functor.map FG f) ∘ apply ≡ apply ∘ (Functor.map FF f)
+
+IdNT : NT Id Id
+IdNT = record {
+    FF = IdF ;
+    FG = IdF ;
+    apply = λ x → x ;
+    naturality = λ f → refl }  
